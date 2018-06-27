@@ -89,7 +89,7 @@ class DB {
     async selectCompanyID(companyName) {
         console.log(`Selecting ID for Company Name: ${companyName}`);
         try{
-            const companyRows = await this.query("select id from companies where company_name = $1", [companyName]);
+            const companyRows = await this.query("select * from companies where company_name = $1", [companyName]);
             if(companyRows.rowCount == 0) {
                 return -1;
             }
@@ -230,6 +230,17 @@ class DB {
                 console.log(`Error inserting category, ${cat}. ${err}`);
             }
         });
+    }
+
+    async selectCompanyCategories(companyID) {
+        console.log(`selecting company categories for ${companyID}`);
+        try {
+            let res = await this.query('select * from company_categories where company_id = $1', [companyID]);
+            return res.rows[0].categories;
+        }
+        catch(err) {
+            console.log(`Error selecting company categories for ${companyID}`)
+        }
     }
 
 

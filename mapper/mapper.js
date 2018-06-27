@@ -1,6 +1,9 @@
 const DB = require("../db/db");
 const db = new DB('koala');
 
+const CrunchBaseScraper = require('../scraper/CrunchBaseScraper');
+const sraper = new CrunchBaseScraper();
+
 const whois = require("whois-json");
 
 
@@ -8,7 +11,7 @@ class Mapper {
     constructor() {
 
     }
-    
+
     async processHostCompanyRequest(hostName) {
         let hostID = await db.selectHostNameID(hostName);
         if(hostID == -1) {
@@ -22,14 +25,18 @@ class Mapper {
             return {
                 "Error":"Unable to map host name to a company."
             }
-        } 
-        
+        }
+
         let companyName = await db.selectCompanyName(mappedCompanyID);
+
+        let companyCategories = await db.selectCompanyCategories(mappedCompanyID);
+
         return {
             "hostName":hostName,
             "hostID":hostID,
             "companyName":companyName,
-            "companyID":mappedCompanyID
+            "companyID":mappedCompanyID,
+            "categories" : companyCategories
         };
     }
     async getRegistrantOrganisation(whoIsData) {
