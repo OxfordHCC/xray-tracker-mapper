@@ -17,12 +17,13 @@ app.get('/host/:hostName', async (req, res) => {
     let headersSent = false;
     process.on('uncaughtException', function (err) {
         if(!headersSent){
-            res.send({"UNCAUGHT_ERROR":err});
+            res.send({"UNCAUGHT_ERROR":err.toString()});
             headersSent = true;
         }
     });
     try{
-        let mapping = await mapper.processHostCompanyRequest(req.params.hostName);  
+        let mapping = await mapper.processHostCompanyRequest(req.params.hostName);
+
         if(!headersSent){
             if(mapping.companyID != undefined
             && mapping.companyName != undefined
@@ -38,8 +39,9 @@ app.get('/host/:hostName', async (req, res) => {
         }
     }
     catch(err){
+        console.log(`Error ${err}`);
         if(!headersSent) {
-            res.send({"ERROR":err});
+            res.send({"ERROR":err.toString()});
         }
     }
 });
