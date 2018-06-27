@@ -8,7 +8,7 @@ async function main() {
         for(let dom of ele.doms) {
             await db.insertHostName(dom);
             await db.insertCompanyName(ele.owner_name);
-            await db.insertCompanyHostPair(ele.owner_name, dom)
+            await db.insertCompanyHostPair(dom, ele.owner_name)
         }
     }
 }
